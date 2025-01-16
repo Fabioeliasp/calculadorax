@@ -3,32 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Preços</title>
+    <title>CALCULADORAx</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #f0f8ff; /* Cor de fundo personalizada */
+            background-color: #454546; /* Cor de fundo personalizada */
         }
         .container {
             max-width: 500px;
             margin: auto;
             padding: 20px;
-            background: #ffffff;
+            background: #b9b7b9fa;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            border: 2px solid #007bff; /* Cor da borda personalizada */
-        }
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo img {
-            max-width: 150px;
+            border: 2px solid #ff00c8; /* Cor da borda personalizada */
         }
         h2 {
             text-align: center;
-            color: #007bff; /* Cor personalizada */
+            color: #ffffff; /* Cor personalizada */
         }
         label {
             font-weight: bold;
@@ -43,7 +36,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background: #007bff;
+            background: #ff00dd;
             color: white;
             border: none;
             border-radius: 5px;
@@ -51,21 +44,20 @@
             cursor: pointer;
         }
         button:hover {
-            background: #0056b3;
+            background: #d900b8;
         }
         .result {
             margin-top: 20px;
             padding: 15px;
-            background: #e9ecef;
-            border: 1px solid #ccc;
+            background: #d1e7dd;
+            border: 2px solid #0f5132;
+            color: #0f5132;
             border-radius: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-        </div>
         <h2>CALCULADORAx</h2>
         <label for="cost">Custo do Produto (R$):</label>
         <input type="number" id="cost" placeholder="Digite o custo do produto">
@@ -75,6 +67,9 @@
 
         <label for="tax">Impostos (%):</label>
         <input type="number" id="tax" placeholder="Digite o percentual de impostos">
+
+        <label for="paymentFee">Taxa da Forma de Pagamento (%):</label>
+        <input type="number" id="paymentFee" placeholder="Digite a taxa da forma de pagamento (ex.: cartão de crédito)">
 
         <label for="profit">Margem de Lucro Desejada (%):</label>
         <input type="number" id="profit" placeholder="Digite a margem de lucro">
@@ -89,6 +84,7 @@
             const cost = parseFloat(document.getElementById('cost').value) || 0;
             const expensesPercentage = parseFloat(document.getElementById('expenses').value) / 100 || 0;
             const tax = parseFloat(document.getElementById('tax').value) / 100 || 0;
+            const paymentFee = parseFloat(document.getElementById('paymentFee').value) / 100 || 0;
             const profit = parseFloat(document.getElementById('profit').value) / 100 || 0;
 
             if (cost <= 0) {
@@ -99,14 +95,16 @@
             const expensesValue = cost * expensesPercentage;
             const taxValue = cost * tax;
             const totalCost = cost + expensesValue + taxValue;
-            const sellingPrice = totalCost / (1 - profit);
-            const netProfit = sellingPrice - totalCost;
+            const sellingPrice = totalCost / (1 - (profit + paymentFee));
+            const paymentFeeValue = sellingPrice * paymentFee;
+            const netProfit = sellingPrice - totalCost - paymentFeeValue;
 
             document.getElementById('result').style.display = 'block';
             document.getElementById('result').innerHTML = `
                 <p><strong>Preço Sugerido de Venda:</strong> R$ ${sellingPrice.toFixed(2)}</p>
                 <p><strong>Valor Pago de Impostos:</strong> R$ ${taxValue.toFixed(2)}</p>
                 <p><strong>Despesas Operacionais (em R$):</strong> R$ ${expensesValue.toFixed(2)}</p>
+                <p><strong>Taxa da Forma de Pagamento (em R$):</strong> R$ ${paymentFeeValue.toFixed(2)}</p>
                 <p><strong>Lucro Líquido:</strong> R$ ${netProfit.toFixed(2)}</p>
             `;
         }
